@@ -1,10 +1,10 @@
 <html>
 <body>
-
-
+<h1>All Recipes: </h1>
+  <% @i = 0 %>
   <% @recipe_names.each do |recipe| %>
-      <p><a href="/recipes/<%=@recipe_ids[('id').to_i]%>"><%= recipe %></a></p>
-
+      <p><a href="/recipes/<%=@recipe_ids[@i]%>"><%= recipe %></a></p>
+  <% @i += 1 %>
   <% end %>
 </body>
 </html>

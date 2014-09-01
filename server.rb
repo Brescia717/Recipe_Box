@@ -7,7 +7,7 @@ def db_connection
   log = []
   begin
     connection = PG.connect(dbname: 'recipes')
-    log = connection.exec('SELECT name, id FROM recipes').to_a
+    log = connection.exec('SELECT DISTINCT recipes.name, recipes.id FROM recipes JOIN ingredients ON recipes.id = ingredients.recipe_id ORDER BY recipes.name ASC').to_a
   ensure
     connection.close
   end
@@ -22,7 +22,7 @@ get '/recipes' do
     @recipe_names << recipe["name"]
     @recipe_ids << recipe["id"].to_i
   end
-  @recipe_names = @recipe_names.uniq.sort
+  @recipe_names = @recipe_names.uniq
   @recipe_ids = @recipe_ids.uniq
 
   erb :recipes
