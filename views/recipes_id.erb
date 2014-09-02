@@ -1,11 +1,20 @@
 <html>
 <body>
+<h2><%= @recipe_info[0]['name'] %></h2>
 
-<% @recipe_info.each do |recipe| %>
-  <h3><%= recipe['name'] %></h3>
-  <p>Description: <%= recipe["description"] %></p>
-  <p>Instructions: <%= recipe["instructions"] %></p>
+<h3>Description: </h3>
+<p><%= @recipe_info[0]['description'] %></p>
+
+<h3>Instructions: </h3>
+<p><%= @recipe_info[0]['instructions'] %></p>
+
+<h3>Ingredients: </h3>
+<% @recipe_info.each do |item| %>
+<ul>
+  <li><%= item['ingredients'] %></li>
+</ul>
 <% end %>
+
 
 </body>
 </html>

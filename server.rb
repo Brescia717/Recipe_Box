@@ -4,10 +4,11 @@ require 'pg'
 require 'pry'
 
 def db_connection
-  log = []
   begin
     connection = PG.connect(dbname: 'recipes')
-    log = connection.exec('SELECT DISTINCT recipes.name, recipes.id FROM recipes JOIN ingredients ON recipes.id = ingredients.recipe_id ORDER BY recipes.name ASC').to_a
+
+    yield(connection)
+
   ensure
     connection.close
   end
@@ -15,23 +16,23 @@ end
 
 
 get '/recipes' do
-  @recipe_names = []
-  @recipe_ids = []
+  query = 'SELECT recipes.name AS name, recipes.id AS id FROM recipes ORDER BY recipes.name'
 
-  db_connection.each do |recipe|
-    @recipe_names << recipe["name"]
-    @recipe_ids << recipe["id"].to_i
+  @recipe_names = db_connection do |conn|
+    conn.exec(query)
   end
-  @recipe_names = @recipe_names.uniq
-  @recipe_ids = @recipe_ids.uniq
 
   erb :recipes
 end
 
 get '/recipes/:id' do
-  @recipe_info = []
-  @recipe_info = db_connection.find_all{|ids| ids["id"] == params[:id]}
-  @recipe_info
+  selected = params[:id]
+  query = 'SELECT recipes.name AS name, recipes.description AS description, recipes.instructions AS instructions,
+   ingredients.name AS ingredients FROM recipes LEFT OUTER JOIN ingredients ON ingredients.recipe_id = recipes.id WHERE recipes.id = $1'
+
+  @recipe_info = db_connection do |conn|
+    conn.exec(query, [selected])
+  end
 
   erb :recipes_id
 end

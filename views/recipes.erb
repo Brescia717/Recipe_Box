@@ -1,10 +1,10 @@
 <html>
 <body>
 <h1>All Recipes: </h1>
-  <% @i = 0 %>
-  <% @recipe_names.each do |recipe| %>
-      <p><a href="/recipes/<%=@recipe_ids[@i]%>"><%= recipe %></a></p>
-  <% @i += 1 %>
-  <% end %>
+
+<% @recipe_names.each do |recipe| %>
+  <p><a href="/recipes/<%= recipe['id'] %>"><%= recipe['name'] %></a></p>
+<% end %>
+
 </body>
 </html>
