@@ -40,19 +40,11 @@ get '/recipes/:id' do
 
 
   @ingredients = []
-  sqll = 'SELECT recipes.id, ingredients.name, ingredients.recipe_id FROM recipes JOIN ingredients ON ingredients.recipe_id = recipes.id'
+  sqll = 'SELECT DISTINCT ingredients.name, ingredients.recipe_id FROM ingredients JOIN recipes ON recipes.id = ingredients.recipe_id'
   @ingredients = db_connection(sqll).find_all do |recipe|
-    recipe["id"] == params[:id]
+    recipe["recipe_id"] == params[:id]
   end
   @ingredients = @ingredients.uniq
-
-  # ingredients = 'SELECT * FROM recipes JOIN ingredients ON recipes.id = ingredients.recipe_id'
-  # @ingredients = []
-  # db_connection(ingredients).find_all do |item|
-  #   items = item["ingredients"]
-  #   print items
-  # end
-  # @ingredients
 
   erb :recipes_id
 end
